@@ -10,7 +10,7 @@ using v8::Number;
 using v8::Value;
 using v8::Exception;
 
-void Method(const FunctionCallbackInfo<Value>& args) {
+void Hash(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
   if (args.Length() < 1) {
     isolate->ThrowException(Exception::TypeError(
@@ -34,8 +34,29 @@ void Method(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(hashNumber);
 }
 
+void Sum(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+  if (args.Length() < 2) {
+    isolate->ThrowException(Exception::TypeError(
+      String::NewFromUtf8(isolate, "Wrong number of arguments")));
+    return;
+  }
+
+  if (!args[0]->IsNumber() || !args[0]->IsNumber()) {
+    isolate->ThrowException(Exception::TypeError(
+        String::NewFromUtf8(isolate, "Wrong arguments")));
+    return;
+  }
+
+   double value = args[0]->NumberValue() + args[1]->NumberValue();
+   Local<Number> sum = Number::New(isolate, value);
+
+  args.GetReturnValue().Set(sum);
+}
+
 void init(Local<Object> exports) {
-  NODE_SET_METHOD(exports, "hash", Method);
+  NODE_SET_METHOD(exports, "hash", Hash);
+  NODE_SET_METHOD(exports, "sum", Sum);
 }
 
 NODE_MODULE(hasher, init)
