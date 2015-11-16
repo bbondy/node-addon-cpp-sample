@@ -7,6 +7,7 @@ using v8::Local;
 using v8::Object;
 using v8::String;
 using v8::Number;
+using v8::Function;
 using v8::Value;
 using v8::Exception;
 
@@ -54,9 +55,18 @@ void Sum(const FunctionCallbackInfo<Value>& args) {
   args.GetReturnValue().Set(sum);
 }
 
+void GetNameAsync(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+  Local<Function> cb = Local<Function>::Cast(args[0]);
+  const unsigned argc = 1;
+  Local<Value> argv[argc] = { String::NewFromUtf8(isolate, "Brian R. Bondy") };
+  cb->Call(Null(isolate), argc, argv);
+}
+
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "hash", Hash);
   NODE_SET_METHOD(exports, "sum", Sum);
+  NODE_SET_METHOD(exports, "getNameAsync", GetNameAsync);
 }
 
 NODE_MODULE(hasher, init)
