@@ -6,3 +6,4 @@ console.log(addon.sum(3,7));
 addon.getNameAsync(function(msg) {
   console.log(msg);
 });
+console.log(addon.wrapStringInObj('test123'));

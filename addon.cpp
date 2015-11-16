@@ -63,10 +63,20 @@ void GetNameAsync(const FunctionCallbackInfo<Value>& args) {
   cb->Call(Null(isolate), argc, argv);
 }
 
+void WrapStringInObj(const FunctionCallbackInfo<Value>& args) {
+  Isolate* isolate = args.GetIsolate();
+
+  Local<Object> obj = Object::New(isolate);
+  obj->Set(String::NewFromUtf8(isolate, "msg"), args[0]->ToString());
+
+  args.GetReturnValue().Set(obj);
+}
+
 void init(Local<Object> exports) {
   NODE_SET_METHOD(exports, "hash", Hash);
   NODE_SET_METHOD(exports, "sum", Sum);
   NODE_SET_METHOD(exports, "getNameAsync", GetNameAsync);
+  NODE_SET_METHOD(exports, "wrapStringInObj", WrapStringInObj);
 }
 
 NODE_MODULE(hasher, init)
